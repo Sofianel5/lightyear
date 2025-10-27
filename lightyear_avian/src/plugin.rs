@@ -346,7 +346,7 @@ impl LightyearAvianPlugin {
     /// Add Transform only when Position/Rotation are both present and Transform is not.
     fn position_rotation_to_transform(
         trigger: On<Add, (Position, Rotation)>,
-        query: Query<(), (With<Position>, With<Rotation>)>,
+        query: Query<(), (With<Position>, With<Rotation>, Without<Transform>)>,
         mut commands: Commands,
     ) {
         if query.get(trigger.entity).is_ok() {
