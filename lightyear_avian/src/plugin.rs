@@ -67,6 +67,7 @@ use lightyear_interpolation::prelude::InterpolationRegistry;
 use lightyear_prediction::plugin::PredictionSystems;
 use lightyear_prediction::prelude::{PredictionAppRegistrationExt, RollbackSystems};
 use lightyear_replication::prelude::TransformLinearInterpolation;
+use tracing::info;
 
 /// Indicate which components you are replicating over the network
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
@@ -227,6 +228,7 @@ impl Plugin for LightyearAvianPlugin {
                     .set_interpolation::<Transform>(TransformLinearInterpolation::lerp);
             }
             AvianReplicationMode::Transform => {
+                info!("AvianReplicationMode::Transform");
                 if !self.update_syncs_manually {
                     // need to run TransformToPosition in FixedPostUpdate since avian uses Position internally
                     // but the user operates on Transform
@@ -346,14 +348,17 @@ impl LightyearAvianPlugin {
     /// Add Transform only when Position/Rotation are both present and Transform is not.
     fn position_rotation_to_transform(
         trigger: On<Add, (Position, Rotation)>,
-        query: Query<(), (With<Position>, With<Rotation>, Without<Transform>)>,
+        query: Query<Option<&Name>, (With<Position>, With<Rotation>, Without<Transform>)>,
         mut commands: Commands,
     ) {
-        if query.get(trigger.entity).is_ok() {
+        if let Ok(name) = query.get(trigger.entity) {
+            info!(
+                entity = ?trigger.entity,
+                name = ?name.map(|n| n.as_str()),
+                "Inserting Transform::default()"
+            );
             // the Transform will be updated by the sync system
-            commands
-                .entity(trigger.entity)
-                .insert_if_new(Transform::default());
+            commands.entity(trigger.entity).insert(Transform::default());
         }
     }
 }
