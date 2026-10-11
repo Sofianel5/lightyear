@@ -418,10 +418,7 @@ mod tests {
     use bevy_ecs::component::Component;
     use bevy_ecs::query::{ArchetypeFilter, QueryState};
     use bevy_ecs::schedule::IntoScheduleConfigs;
-    use bevy_math::{
-        Curve,
-        curve::{Ease, FunctionCurve, Interval},
-    };
+    use bevy_curve::{Curve, Ease, FunctionCurve, Interval};
     use bevy_replicon::prelude::{
         Diffable as RepliconDiffable, RepliconPlugins, RepliconSharedPlugin, RepliconTick,
     };

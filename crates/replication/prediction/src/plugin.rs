@@ -95,7 +95,7 @@ impl Plugin for PredictionMarkerPlugin {
 /// `LastConfirmedInput` is deliberately not removed with `PredictionManager`: it also represents
 /// useful global input state for deterministic simulations that do not enable prediction.
 fn initialize_prediction_resources(
-    _trigger: On<Insert, PredictionManager>,
+    _trigger: On<Insert<PredictionManager>>,
     mut commands: Commands,
 ) {
     commands.init_resource::<LastConfirmedInput>();

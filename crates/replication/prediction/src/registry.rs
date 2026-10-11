@@ -8,10 +8,7 @@ use bevy_ecs::component::{ComponentId, Mutable};
 use bevy_ecs::prelude::*;
 use bevy_ecs::ptr::PtrMut;
 use bevy_ecs::world::unsafe_world_cell::UnsafeWorldCell;
-use bevy_math::{
-    Curve,
-    curve::{Ease, EaseFunction, EasingCurve},
-};
+use bevy_curve::{Curve, Ease, EaseFunction, EasingCurve};
 use bevy_replicon::bytes::Bytes;
 use bevy_replicon::postcard_utils;
 use bevy_replicon::prelude::{AppMarkerExt, RepliconTick, RuleFns};

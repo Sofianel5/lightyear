@@ -76,6 +76,7 @@
 //! [`PreviousVisual`] is only removed by the system that records the correction,
 //! so a component that is removed and added back still has its jump measured, and
 //! a component that never comes back does not leave its saved value behind.
+use bevy_ecs::system::SystemAccess;
 use crate::SyncComponent;
 use crate::archetypes::{CachedPredictionComponent, UpdateFrameInterpolationPostRollbackWorld};
 use crate::manager::PredictionManager;
@@ -90,7 +91,7 @@ use bevy_ecs::{
     change_detection::Tick as ChangeTick,
     component::{ComponentId, Mutable},
     prelude::*,
-    query::{FilteredAccess, FilteredAccessSet},
+    query::FilteredAccess,
     system::{SystemMeta, SystemParam, SystemParamValidationError},
     world::unsafe_world_cell::UnsafeWorldCell,
 };
@@ -271,10 +272,11 @@ unsafe impl SystemParam for CorrectionWorld<'_> {
 
     fn init_access(
         _state: &Self::State,
-        _system_meta: &mut SystemMeta,
-        component_access_set: &mut FilteredAccessSet,
+        system_meta: &mut SystemMeta,
+        system_access: &mut SystemAccess,
         world: &mut World,
     ) {
+        let component_access_set = system_access.require_shared_access::<Self>(system_meta);
         let mut filtered_access = FilteredAccess::default();
         if let Some(registry) = world.get_resource::<PredictionRegistry>() {
             for correction in registry.post_rollback_corrections() {
@@ -363,7 +365,7 @@ pub fn add_correction_systems<
 /// causes is measured from it. The system that computes corrections decides when
 /// a saved value is past saving; see [`crate::correction`]'s creation system.
 fn remove_correction_state_on_live_removed<C: Component, D: Send + Sync + 'static>(
-    trigger: On<Remove, C>,
+    trigger: On<Remove<C>>,
     mut commands: Commands,
 ) {
     commands
@@ -1056,10 +1058,7 @@ mod tests {
     use core::time::Duration;
 
     use bevy_ecs::system::RunSystemOnce;
-    use bevy_math::{
-        Curve,
-        curve::{Ease, FunctionCurve, Interval},
-    };
+    use bevy_curve::{Curve, Ease, FunctionCurve, Interval};
     use bevy_replicon::prelude::*;
     use bevy_state::app::StatesPlugin;
     use lightyear_interpolation::{

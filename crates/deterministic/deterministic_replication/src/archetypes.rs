@@ -1,3 +1,4 @@
+use bevy_ecs::system::SystemAccess;
 use crate::Deterministic;
 use alloc::collections::BTreeMap;
 use alloc::vec::Vec;
@@ -5,7 +6,7 @@ use bevy_ecs::archetype::{Archetype, ArchetypeGeneration, ArchetypeId};
 use bevy_ecs::change_detection::Tick;
 use bevy_ecs::component::{ComponentId, StorageType};
 use bevy_ecs::prelude::World;
-use bevy_ecs::query::{FilteredAccess, FilteredAccessSet};
+use bevy_ecs::query::FilteredAccess;
 use bevy_ecs::system::{ReadOnlySystemParam, SystemMeta, SystemParam, SystemParamValidationError};
 use bevy_ecs::world::unsafe_world_cell::UnsafeWorldCell;
 use lightyear_prediction::prelude::PredictionRegistry;
@@ -145,9 +146,10 @@ unsafe impl<const HISTORY: bool> SystemParam for ChecksumWorld<'_, '_, HISTORY> 
     fn init_access(
         state: &Self::State,
         system_meta: &mut SystemMeta,
-        component_access_set: &mut FilteredAccessSet,
+        system_access: &mut SystemAccess,
         world: &mut World,
     ) {
+        let component_access_set = system_access.require_shared_access::<Self>(system_meta);
         let mut filtered_access = FilteredAccess::default();
         filtered_access.add_read(state.marker_id);
         // Exclude entities with DisableRollback from the checksum calculation since they won't have a PredictionHistory?

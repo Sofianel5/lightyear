@@ -1,3 +1,4 @@
+use bevy_ecs::system::SystemAccess;
 use crate::registry::{
     InterpolationArchetypeKey, InterpolationRegistry, RuleResolutionScratch, RuleTarget,
 };
@@ -8,7 +9,7 @@ use bevy_ecs::{
     change_detection::Tick as ChangeTick,
     component::{ComponentId, Components},
     prelude::*,
-    query::{FilteredAccess, FilteredAccessSet},
+    query::FilteredAccess,
     system::{SystemMeta, SystemParam, SystemParamValidationError},
     world::{FromWorld, unsafe_world_cell::UnsafeWorldCell},
 };
@@ -79,10 +80,11 @@ unsafe impl SystemParam for InterpolationWorld<'_, '_> {
 
     fn init_access(
         state: &Self::State,
-        _system_meta: &mut SystemMeta,
-        component_access_set: &mut FilteredAccessSet,
+        system_meta: &mut SystemMeta,
+        system_access: &mut SystemAccess,
         world: &mut World,
     ) {
+        let component_access_set = system_access.require_shared_access::<Self>(system_meta);
         let mut filtered_access = FilteredAccess::default();
         filtered_access.add_read(state.interpolated_component_id);
 

@@ -211,7 +211,7 @@ impl NetcodeServerPlugin {
                 // SAFETY: we know that the entities of a relationship are unique
                 let unique_slice =
                     unsafe { UniqueEntitySlice::from_slice_unchecked(server.collection()) };
-                client_query.iter_many_unique_mut(unique_slice).for_each(
+                client_query.iter_many_unique_mut(unique_slice).matched().for_each(
                     |(entity, mut link, remote_id, connected, disconnecting)| {
                         // TODO: we can be here while the link has been established, but the client is not yet connected
                         //  so the PeerId is not Netcode! I think we should just error?
@@ -324,7 +324,7 @@ impl NetcodeServerPlugin {
                     let unique_slice =
                         unsafe { UniqueEntitySlice::from_slice_unchecked(server.collection()) };
                     link_query
-                        .iter_many_unique_mut(unique_slice)
+                        .iter_many_unique_mut(unique_slice).matched()
                         .for_each(|(entity, mut link)| {
                             let mut entity_mut = c.entity(entity);
 
@@ -417,7 +417,7 @@ impl NetcodeServerPlugin {
         }
     }
 
-    fn reset_on_stopped(trigger: On<Add, Stopped>, mut query: Query<&mut NetcodeServer>) {
+    fn reset_on_stopped(trigger: On<Add<Stopped>>, mut query: Query<&mut NetcodeServer>) {
         if let Ok(mut server) = query.get_mut(trigger.entity) {
             server.reset();
         }
@@ -445,7 +445,7 @@ impl NetcodeServerPlugin {
             // SAFETY: we know that the list of client entities are unique because it is a Relationship
             let unique_slice =
                 unsafe { UniqueEntitySlice::from_slice_unchecked(server.collection()) };
-            link_query.iter_many_unique_mut(unique_slice).try_for_each(
+            link_query.iter_many_unique_mut(unique_slice).matched().try_for_each(
                 |(entity, mut link, remote_peer_id)| {
                     let PeerId::Netcode(client_id) = remote_peer_id.0 else {
                         error!("Client {:?} is not a Netcode client", remote_peer_id);

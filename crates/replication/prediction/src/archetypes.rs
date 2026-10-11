@@ -1,3 +1,4 @@
+use bevy_ecs::system::SystemAccess;
 use crate::Predicted;
 use crate::despawn::PredictionDisable;
 use crate::registry::{
@@ -13,7 +14,7 @@ use bevy_ecs::{
     component::{ComponentId, Components, StorageType},
     entity_disabling::DefaultQueryFilters,
     prelude::ResMut,
-    query::{FilteredAccess, FilteredAccessSet},
+    query::FilteredAccess,
     resource::Resource,
     system::{SystemMeta, SystemParam, SystemParamValidationError},
     world::{FromWorld, World, unsafe_world_cell::UnsafeWorldCell},
@@ -107,15 +108,16 @@ unsafe impl<const MODE: u8> SystemParam for PredictionWorld<'_, '_, MODE> {
     fn init_access(
         state: &Self::State,
         system_meta: &mut SystemMeta,
-        component_access_set: &mut FilteredAccessSet,
+        system_access: &mut SystemAccess,
         world: &mut World,
     ) {
         <ResMut<'static, PredictedArchetypes> as SystemParam>::init_access(
             state,
             system_meta,
-            component_access_set,
+            system_access,
             world,
         );
+        let component_access_set = system_access.require_shared_access::<Self>(system_meta);
 
         let mut access = FilteredAccess::default();
 

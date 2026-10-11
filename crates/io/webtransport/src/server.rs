@@ -97,7 +97,7 @@ impl WebTransportServerPlugin {
     // TODO: should also add on_connecting? Or maybe it's handled automatically
     //  because the connecting entity adds SessionEndpoint? (and lightyear_aeronet handles that)
     fn on_connection(
-        trigger: On<Add, Session>,
+        trigger: On<Add<Session>>,
         query: Query<&AeronetLinkOf>,
         child_query: Query<(&ChildOf, &PeerAddr), With<WebTransportServerClient>>,
         mut commands: Commands,

@@ -68,7 +68,7 @@ impl Server {
     }
 
     fn unlinked(
-        trigger: On<Add, Unlinked>,
+        trigger: On<Add<Unlinked>>,
         mut query: Query<(&Server, &Unlinked)>,
         mut commands: Commands,
     ) {
@@ -202,7 +202,7 @@ impl LinkOf {
 /// entities. Keeping the conditioner in [`Link::recv`] lets all IO backends use their existing
 /// receive path unchanged.
 fn add_server_link_conditioner(
-    trigger: On<Add, LinkOf>,
+    trigger: On<Add<LinkOf>>,
     mut links: Query<(&LinkOf, &mut Link)>,
     servers: Query<&Server>,
 ) {
