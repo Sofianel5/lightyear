@@ -565,8 +565,8 @@ mod tests {
     use crate::plugin::PredictionMarkerPlugin;
     use crate::predicted_history::PredictionHistory;
     use crate::registry::{PredictionBuilderExt, PredictionRegistry};
-    use bevy_ecs::system::RunSystemOnce;
     use bevy_curve::{Curve, Ease, FunctionCurve, Interval};
+    use bevy_ecs::system::RunSystemOnce;
     use bevy_replicon::prelude::*;
     use bevy_state::app::StatesPlugin;
     use bevy_time::{Time, Virtual};

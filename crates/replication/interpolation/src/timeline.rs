@@ -2,11 +2,11 @@
 //! a trigger to inform the receiver of its SendInterval. This interval is used
 //! by the receiver to determine how the InterpolationTime should be configured
 
-use bevy_ecs::system::SystemAccess;
 use bevy_app::{App, Plugin, PostUpdate, PreUpdate};
 use bevy_derive::{Deref, DerefMut};
 use bevy_ecs::change_detection::Tick as ChangeTick;
 use bevy_ecs::prelude::*;
+use bevy_ecs::system::SystemAccess;
 use bevy_ecs::system::{ReadOnlySystemParam, SystemMeta, SystemParam, SystemParamValidationError};
 use bevy_ecs::world::unsafe_world_cell::UnsafeWorldCell;
 use bevy_reflect::Reflect;

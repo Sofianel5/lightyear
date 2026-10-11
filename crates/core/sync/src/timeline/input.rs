@@ -1,6 +1,6 @@
-use bevy_ecs::system::SystemAccess;
 use crate::ping::manager::PingManager;
 use crate::timeline::sync::{SyncConfig, SyncContext, SyncTargetTimeline, TimelineSync};
+use bevy_ecs::system::SystemAccess;
 
 use bevy_ecs::change_detection::Tick as ChangeTick;
 use bevy_ecs::prelude::*;

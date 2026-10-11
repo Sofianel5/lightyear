@@ -1,4 +1,3 @@
-use bevy_ecs::system::SystemAccess;
 use crate::Predicted;
 use crate::despawn::PredictionDisable;
 use crate::registry::{
@@ -8,6 +7,7 @@ use crate::registry::{
 };
 use crate::rollback::{DeterministicPredicted, DisableRollback};
 use alloc::vec::Vec;
+use bevy_ecs::system::SystemAccess;
 use bevy_ecs::{
     archetype::{Archetype, ArchetypeGeneration, ArchetypeId, Archetypes},
     change_detection::Tick as ChangeTick,

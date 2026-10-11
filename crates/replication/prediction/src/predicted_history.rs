@@ -331,13 +331,15 @@ pub(crate) fn apply_component_removal_predicted<C: Component>(
 /// component's rollback-membership marker, so it must be present for the catch-up rollback to
 /// materialize that confirmed value as the live component.
 pub(crate) fn add_prediction_history<C: Component + Clone>(
-    trigger: On<Add<(
+    trigger: On<
+        Add<(
             C,
             Predicted,
             PreSpawned,
             DeterministicPredicted,
             CatchUpGated,
-        ),>>,
+        )>,
+    >,
     query: Query<
         (),
         Or<(

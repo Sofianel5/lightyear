@@ -76,7 +76,6 @@
 //! [`PreviousVisual`] is only removed by the system that records the correction,
 //! so a component that is removed and added back still has its jump measured, and
 //! a component that never comes back does not leave its saved value behind.
-use bevy_ecs::system::SystemAccess;
 use crate::SyncComponent;
 use crate::archetypes::{CachedPredictionComponent, UpdateFrameInterpolationPostRollbackWorld};
 use crate::manager::PredictionManager;
@@ -86,6 +85,7 @@ use crate::rollback::RollbackSystems;
 use crate::switch::{SwitchBlend, SwitchDirection};
 use alloc::vec::Vec;
 use bevy_app::prelude::*;
+use bevy_ecs::system::SystemAccess;
 use bevy_ecs::{
     archetype::{Archetype, ArchetypeGeneration, ArchetypeId, Archetypes},
     change_detection::Tick as ChangeTick,
@@ -1057,8 +1057,8 @@ impl CorrectionPolicy {
 mod tests {
     use core::time::Duration;
 
-    use bevy_ecs::system::RunSystemOnce;
     use bevy_curve::{Curve, Ease, FunctionCurve, Interval};
+    use bevy_ecs::system::RunSystemOnce;
     use bevy_replicon::prelude::*;
     use bevy_state::app::StatesPlugin;
     use lightyear_interpolation::{
